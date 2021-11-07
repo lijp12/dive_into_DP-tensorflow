@@ -15,23 +15,28 @@ def gen_data():
     labels += tf.random.normal(labels.shape, stddev=0.01)
     return features, labels
 
+
 def data_iter(features, labels, batch_size):
-    num_examples = features.shape[0]
+    num_examples = len(features)
     indices = list(range(num_examples))
     random.shuffle(indices)
     for i in range(0, num_examples, batch_size):
         j = indices[i:min(num_examples, i+batch_size)]
         yield tf.gather(features, axis=0, indices=j), tf.gather(labels, axis=0, indices=j)
 
+
 def linreg(X, w, b):
     return tf.matmul(X, w) + b
+
 
 def squared_loss(y_hat, y):
     return (y_hat - tf.reshape(y, y_hat.shape)) **2 / 2
 
+
 def sgd(params, lr, batch_size, grads):
     for i, param in enumerate(params):
         param.assign_sub(lr * grads[i] / batch_size)
+
 
 def main():
     # tf.enable_eager_execution()
